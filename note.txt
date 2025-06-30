@@ -1,0 +1,4 @@
+1. Làm login form register form
+2. Làm chức năng từ lúc chọn địa điểm tới để lại thông tin (bước 1 - 2)
+
+chia component và dùng heroui
