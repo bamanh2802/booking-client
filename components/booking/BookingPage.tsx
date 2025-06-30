@@ -1,8 +1,10 @@
 // src/pages/BookingPage.tsx
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // FIX: Import useRouter để điều hướng
 import { Card } from "@heroui/card";
 import { Divider } from "@heroui/divider";
+import { Button } from "@heroui/button"; // FIX: Import Button để tạo nút đăng nhập
 
 import StepHeader from "./StepHeader";
 import SearchBar from "./SearchBar";
@@ -68,6 +70,8 @@ interface BookingPageProps {
 }
 
 export default function BookingPage({ onSearch }: BookingPageProps) {
+  const router = useRouter(); // FIX: Khởi tạo router
+
   const [step, setStep] = useState<"form" | "list">("form");
   const [trips, setTrips] = useState<ApiTrip[]>([]);
   const [formData, setFormData] = useState<{
@@ -77,17 +81,21 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
   } | null>(null);
   const [tripCount, setTripCount] = useState(0);
   const [selectedTripIndex, setSelectedTripIndex] = useState<number | null>(
-    null,
+    null
   );
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [selectedTripDetails, setSelectedTripDetails] =
     useState<TripDetails | null>(null);
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
   const [bookingResult, setBookingResult] = useState<BookingDetails | null>(
-    null,
+    null
   );
 
+  // FIX: Thêm state để lưu lỗi cụ thể khi tải chi tiết chuyến đi
+  const [detailsError, setDetailsError] = useState<string | null>(null);
+
   const resetBookingState = () => {
+    // ... (logic giữ nguyên)
     setStep("form");
     setTrips([]);
     setFormData(null);
@@ -106,17 +114,12 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
     resetBookingState();
   };
 
-  // ----- BỎ HÀM NÀY ĐI -----
-  // const handleReturnToSearchForm = () => {
-  //   resetBookingState();
-  // };
-
   const handleGetTrip = async (
     day: string,
     startLocation: string,
-    endLocation: string,
+    endLocation: string
   ) => {
-    // Khi tìm kiếm, đóng mọi trip item đang mở
+    // ... (logic giữ nguyên)
     setSelectedTripIndex(null);
     setSelectedTripDetails(null);
     setSelectedSeats([]);
@@ -127,7 +130,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
       const response = await getTripWithLocation(
         day,
         startLocation,
-        endLocation,
+        endLocation
       );
 
       setTrips(response.data?.results || []);
@@ -142,6 +145,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
 
   const handleGetDetailTrip = async (tripId: string) => {
     setIsDetailsLoading(true);
+    setDetailsError(null); // Reset lỗi trước mỗi lần gọi API
     try {
       const response = await getDetailTrip(tripId);
 
@@ -151,11 +155,21 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
           bookedSeats: response.data.bookedSeats.seats,
         });
       } else {
+        // Trường hợp API trả về success: false
         setSelectedTripDetails(null);
+        setDetailsError("Không thể tải thông tin ghế. Dữ liệu không hợp lệ.");
       }
-    } catch (e) {
+    } catch (e: any) {
+      // FIX: Bắt lỗi một cách chi tiết
       console.error("Error fetching trip details:", e);
       setSelectedTripDetails(null);
+
+      // FIX: Kiểm tra mã trạng thái của lỗi
+      if (e.response && e.response.status === 401) {
+        setDetailsError("Bạn cần đăng nhập để có thể chọn ghế và đặt vé.");
+      } else {
+        setDetailsError("Không thể tải thông tin ghế. Vui lòng thử lại sau.");
+      }
     } finally {
       setIsDetailsLoading(false);
     }
@@ -166,12 +180,13 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
 
     setSelectedSeats([]);
     setSelectedTripDetails(null);
+    setDetailsError(null); // FIX: Reset lỗi khi người dùng chọn chuyến khác
+
     if (isClosing) {
       setSelectedTripIndex(null);
     } else {
       setSelectedTripIndex(idx);
       const selectedTrip = trips[idx];
-
       handleGetDetailTrip(selectedTrip._id);
     }
   };
@@ -189,6 +204,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
     <div
       className={`min-h-[calc(100vh-64px)] overflow-y-auto py-6 px-4 ${step !== "form" ? "bg-slate-50 dark:bg-zinc-800" : ""}`}
     >
+      {/* ... (phần JSX của step 'form' giữ nguyên) */}
       {step === "form" && (
         <div className="max-w-4xl mx-auto">
           <BookingForm onSubmit={handleGetTrip} />
@@ -197,6 +213,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
 
       {step === "list" && (
         <div className="max-w-screen-xl mx-auto">
+          {/* ... (phần JSX của step 'list' header và search bar giữ nguyên) */}
           <StepHeader currentStep={2} />
 
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
@@ -242,6 +259,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
                             </div>
                           )}
                           {!isDetailsLoading && selectedTripDetails && (
+                            // ... (JSX hiển thị SeatMap khi thành công giữ nguyên)
                             <>
                               <SeatMap
                                 booked={selectedTripDetails.bookedSeats}
@@ -262,7 +280,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
                                     {selectedSeats
                                       .map(
                                         (s) =>
-                                          `${s.code}${s.floor === 2 ? "(T2)" : ""}`,
+                                          `${s.code}${s.floor === 2 ? "(T2)" : ""}`
                                       )
                                       .join(", ") || "Chưa chọn ghế"}
                                   </span>
@@ -279,9 +297,20 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
                               </div>
                             </>
                           )}
-                          {!isDetailsLoading && !selectedTripDetails && (
-                            <div className="text-center p-8 text-danger">
-                              Không thể tải thông tin ghế.
+
+                          {/* FIX: Thay thế khối lỗi chung chung bằng khối lỗi động */}
+                          {!isDetailsLoading && detailsError && (
+                            <div className="text-center p-8 text-danger flex flex-col items-center gap-4">
+                              <p className="font-semibold">{detailsError}</p>
+                              {/* Hiển thị nút đăng nhập nếu là lỗi 401 */}
+                              {detailsError.includes("đăng nhập") && (
+                                <Button
+                                  color="primary"
+                                  onPress={() => router.push("/login")}
+                                >
+                                  Đi đến trang đăng nhập
+                                </Button>
+                              )}
                             </div>
                           )}
                         </Card>
