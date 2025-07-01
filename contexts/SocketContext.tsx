@@ -1,3 +1,5 @@
+// src/components/providers/SocketProvider.tsx
+
 "use client";
 
 import {
@@ -8,35 +10,40 @@ import {
   ReactNode,
 } from "react";
 import { io } from "socket.io-client";
-import { Socket } from "@/types/socket"; // Giả sử đường dẫn này đúng
-import { SOCKET_PATH } from "@/services/apiPath"; // Import SOCKET_PATH
+import { Socket } from "@/types/socket";
+// Bạn không cần import SOCKET_PATH nữa, vì chúng ta sẽ định nghĩa nó rõ ràng ở đây
+// import { SOCKET_PATH } from "@/services/apiPath";
 
-// Định nghĩa kiểu dữ liệu cho Context value
 type SocketContextType = Socket | null;
 
-// Tạo Context với kiểu đã định nghĩa
 const SocketContext = createContext<SocketContextType>(null);
 
-// Custom hook để sử dụng trong các component
 export const useSocket = (): SocketContextType => {
   return useContext(SocketContext);
 };
 
-// Định nghĩa kiểu cho props của Provider
 interface SocketProviderProps {
   children: ReactNode;
 }
 
-// Provider component
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [socket, setSocket] = useState<SocketContextType>(null);
 
   useEffect(() => {
-    console.log(`[Socket.IO] Attempting to connect to: ${SOCKET_PATH}`);
+    const SERVER_URL = "https://vexenay.com";
 
-    // Khởi tạo socket
-    const newSocket: Socket = io(SOCKET_PATH, {
+    const SOCKET_IO_PATH = "/api/socket.io";
+
+    console.log(
+      `[Socket.IO] Attempting to connect to: ${SERVER_URL} with path: ${SOCKET_IO_PATH}`
+    );
+
+    const newSocket: Socket = io(SERVER_URL, {
+      // Chỉ định đường dẫn của Socket.IO
+      path: SOCKET_IO_PATH,
+      // Tùy chọn này rất quan trọng để client biết gửi request đến đúng /api
       withCredentials: true,
+      transports: ["websocket", "polling"], // Tăng độ tin cậy
     });
 
     newSocket.on("connect", () => {
@@ -55,11 +62,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
     setSocket(newSocket);
 
+    // Hàm dọn dẹp khi component bị unmount
     return () => {
       console.log("[Socket.IO] Disconnecting...");
       newSocket.disconnect();
     };
-  }, []);
+  }, []); // useEffect chỉ chạy một lần
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
