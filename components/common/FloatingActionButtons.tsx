@@ -9,13 +9,12 @@ import { MdReportProblem } from "react-icons/md";
 
 // Thay thế bằng SĐT và link Zalo của bạn
 const ZALO_LINK = "https://zalo.me/0388502397";
-const PHONE_NUMBER = "tel:YOUR_PHONE_NUMBER";
+const PHONE_NUMBER = "tel:0388502397";
 
 const FloatingActionButtons = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Auto show buttons after 1 second
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 1000);
@@ -28,7 +27,7 @@ const FloatingActionButtons = () => {
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-50">
+    <div className="fixed bottom-6 left-6 z-[99]">
       {/* Zalo Button với hiệu ứng đập đập */}
       <div
         className={`mb-4 transition-all duration-700 ease-out ${

@@ -1,107 +1,50 @@
+import { Phone, Mail } from "lucide-react";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-800 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-slate-900 text-white">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <h3 className="text-xl font-bold mb-4">CarBooking</h3>
-            <p className="text-gray-300 mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-              tellus, luctus nec ullamcorper mattis.
+            <h3 className="text-2xl font-bold mb-4">VeXeRe</h3>
+            <p className="text-gray-300 text-lg">
+              Đặt vé xe bus trực tuyến nhanh chóng, tiện lợi
             </p>
           </div>
 
-          <div>
-            <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  Services
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold mb-4">Services</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  Airport Transfer
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  City Tours
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  Business Travel
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-300 hover:text-white transition-colors"
-                  href="#"
-                >
-                  Wedding Transport
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold mb-4">Contact Us</h3>
-            <address className="not-italic text-gray-300">
-              <p>123 Booking Street</p>
-              <p>City, Country</p>
-              <p className="mt-2">Email: info@carbooking.com</p>
-              <p>Phone: +1 234 567 890</p>
-            </address>
+          <div className="text-center md:text-right">
+            <h4 className="text-lg font-semibold mb-4">Liên Hệ</h4>
+            <div className="space-y-3">
+              <a
+                href="tel:0388502397"
+                className="flex items-center justify-center md:justify-end gap-2 text-gray-300 hover:text-white transition-colors group"
+              >
+                <Phone
+                  size={20}
+                  className="group-hover:scale-110 transition-transform"
+                />
+                <span className="text-lg font-medium">0388 502 397</span>
+              </a>
+              <a
+                href="mailto:info@vexere.com"
+                className="flex items-center justify-center md:justify-end gap-2 text-gray-300 hover:text-white transition-colors group"
+              >
+                <Mail
+                  size={20}
+                  className="group-hover:scale-110 transition-transform"
+                />
+                <span>info@vexere.com</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {currentYear} CarBooking. All rights reserved.</p>
+        <div className="border-t border-gray-700 mt-8 pt-6 text-center">
+          <p className="text-gray-400">
+            &copy; {currentYear} VeXeRe. Tất cả quyền được bảo lưu.
+          </p>
         </div>
       </div>
     </footer>

@@ -8,7 +8,8 @@ import { useRouter, usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useDisclosure } from "@heroui/use-disclosure";
 import { WithdrawalModal } from "./common/WithdrawalModal";
-import { useState } from "react";
+import { NotificationBell } from "./common/NotificationBell";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -28,6 +29,8 @@ import {
 import { Avatar } from "@heroui/avatar";
 import { Skeleton } from "@heroui/skeleton";
 import { link as linkStyles } from "@heroui/theme";
+import { ReferralCodeModal } from "./common/ReferralCodeModal";
+import { useDisclosure as useReferralDisclosure } from "@heroui/use-disclosure";
 
 import { useAuth } from "@/providers/AuthProvider";
 
@@ -114,6 +117,16 @@ export const Navbar = () => {
   const navItems = getNavItemsByRole(user?.roleName || null);
 
   const { logout } = useAuth();
+  const {
+    isOpen: isReferralOpen,
+    onOpen: onReferralOpen,
+    onClose: onReferralClose,
+  } = useReferralDisclosure();
+  const {
+    isOpen: isWithdrawalOpen,
+    onOpen: onWithdrawalOpen,
+    onClose: onWithdrawalClose,
+  } = useDisclosure();
 
   const handleLogout = () => {
     dispatch(clearUser());
@@ -141,30 +154,25 @@ export const Navbar = () => {
 
   // Component cho menu người dùng đã đăng nhập
   const UserSection = () => {
-    let dashboardHref = "/profile";
-    switch (user?.roleName) {
-      // ... (giữ nguyên logic switch case)
-      case Roles.ADMIN:
-        dashboardHref = "/admin/dashboard";
-        break;
-      case Roles.AGENT_LV1:
-        dashboardHref = "/agency/dashboard";
-        break;
-      case Roles.AGENT_LV2:
-        dashboardHref = "/agent/dashboard";
-        break;
-    }
+    // ... logic dashboardHref giữ nguyên
+
+    // Điều kiện để hiển thị nút mã giới thiệu
+    const showReferralOption =
+      (user?.roleName === Roles.CLIENT && !user?.parentId) ||
+      (user?.roleName && user.roleName !== Roles.CLIENT);
 
     return (
       <div className="flex items-center gap-4">
-        {/* NEW: Khu vực hiển thị và kích hoạt modal số dư */}
-        <Button
-          variant="light"
-          className="flex flex-col items-end p-0 h-auto"
-          onPress={onOpen}
-        >
-          <Chip className="font-bold">{formatCurrency(user?.amount)}</Chip>
-        </Button>
+        {/* Chip nạp tiền */}
+        <Chip onClick={onWithdrawalOpen} className="font-bold cursor-pointer ">
+          <div className="flex items-center justify-center">
+            <PlusIcon className="w-4 h-4 mr-1" />
+            {formatCurrency(user?.amount)}
+          </div>
+        </Chip>
+
+        {/* Chuông thông báo */}
+        <NotificationBell />
 
         {/* User Dropdown Menu */}
         <Dropdown placement="bottom-end">
@@ -184,12 +192,17 @@ export const Navbar = () => {
               <p className="font-semibold">Đã đăng nhập với</p>
               <p className="font-semibold">{user?.email}</p>
             </DropdownItem>
-            <DropdownItem key="dashboard" as={NextLink} href={dashboardHref}>
-              Bảng điều khiển
-            </DropdownItem>
             <DropdownItem key="settings" as={NextLink} href="/profile">
               Hồ sơ của tôi
             </DropdownItem>
+
+            {/* THÊM MỤC MÃ GIỚI THIỆU */}
+            {showReferralOption && (
+              <DropdownItem key="referral" onPress={onReferralOpen}>
+                Mã giới thiệu
+              </DropdownItem>
+            )}
+
             <DropdownItem key="logout" color="danger" onPress={handleLogout}>
               Đăng xuất
             </DropdownItem>
@@ -315,7 +328,16 @@ export const Navbar = () => {
             )}
           </div>
         </NavbarMenu>
-        <WithdrawalModal isOpen={isOpen} onClose={onClose} />
+        <WithdrawalModal
+          isOpen={isWithdrawalOpen}
+          onClose={onWithdrawalClose}
+        />
+        {user && (
+          <ReferralCodeModal
+            isOpen={isReferralOpen}
+            onClose={onReferralClose}
+          />
+        )}
       </HeroUINavbar>
     </>
   );

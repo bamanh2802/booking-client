@@ -1,7 +1,10 @@
-// src/app/page.tsx
 "use client";
 
 import { useState } from "react";
+
+// Import các component mới
+import FastBookingForm from "@/components/common/FastBookingForm";
+import KeyFeatures from "@/components/common/KeyFeatures";
 
 import BookingPage from "@/components/booking/BookingPage";
 import HeroSlider from "@/components/home/HeroSlider";
@@ -17,35 +20,39 @@ export default function Page() {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden bg-black">
-      {/* Các component nổi sẽ nằm ở đây để luôn hiển thị */}
+    <div className="relative min-h-screen overflow-y-auto">
       <FloatingActionButtons />
       <LoanSupport />
 
-      <div
-        className={`transition-all duration-700 ease-in-out ${
-          isSearching ? "h-0 opacity-0" : "h-full opacity-100"
-        }`}
-      >
-        <HeroSlider />
+      <div className={``}>
+        <div className={` ${isSearching ? "" : "relative"}`}>
+          <HeroSlider />
+          <div
+            className={` inset-x-0 z-20 transition-all duration-700 ease-in-out ${
+              isSearching ? "top-0 h-full fixed" : "top-3/4 absolute"
+            }`}
+          >
+            <BookingPage onSearch={handleStartSearch} />
+          </div>
+        </div>
+
+        {!isSearching && (
+          <>
+            <main className="relative container z-50 mx-auto mt-[380px] sm:mt-[320px] md:mt-[250px] lg:mt-[200px]">
+              <FastBookingForm />
+              <KeyFeatures />
+            </main>
+
+            <Footer />
+          </>
+        )}
       </div>
 
-      <div
-        className={`absolute inset-x-0 z-10 transition-all duration-700 ease-in-out ${
-          isSearching ? "top-0 h-full" : "top-1/2"
-        }`}
-      >
-        <BookingPage onSearch={handleStartSearch} />
-      </div>
-
-      {/* Ẩn Footer đi khi đang tìm kiếm để có không gian */}
-      <div
-        className={`transition-opacity duration-500 ${
-          isSearching ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        <Footer />
-      </div>
+      {/* 
+        Container cho trang đặt vé.
+        Giữ nguyên hoàn toàn logic và hiệu ứng chuyển cảnh của bạn.
+        Nó sẽ chuyển từ giữa màn hình lên trên cùng.
+      */}
     </div>
   );
 }

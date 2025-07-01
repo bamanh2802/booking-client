@@ -36,6 +36,8 @@ export type TicketRequestStatus =
 export interface TicketRequest {
   _id: string;
   userId: string;
+  amount: number;
+  reason: string;
   tripId: string;
   titleRequest: string;
   ticketId: string | null;
@@ -223,4 +225,29 @@ export interface BookingRequest {
   tripInfo: TripInfo;
   carCompanyInfo: CarCompanyInfo;
   titleRequest: string;
+}
+export interface Notification {
+  _id: string;
+  title: string;
+  message: string;
+  type: 'info' | 'success' | 'warning' | 'error' | string;
+  user: string;
+  action: string;
+  isRead: boolean;
+  targetType: string;
+  targetId: string | null;
+  data: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Định nghĩa cấu trúc response từ API
+export interface PaginatedNotifications {
+  results: Notification[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }

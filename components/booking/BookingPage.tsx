@@ -202,9 +202,8 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
 
   return (
     <div
-      className={`min-h-[calc(100vh-64px)] overflow-y-auto py-6 px-4 ${step !== "form" ? "bg-slate-50 dark:bg-zinc-800" : ""}`}
+      className={`min-h-[calc(100vh-64px)] mt-[64px] overflow-y-auto py-6 px-4 ${step !== "form" ? "bg-slate-50 dark:bg-zinc-800" : ""}`}
     >
-      {/* ... (phần JSX của step 'form' giữ nguyên) */}
       {step === "form" && (
         <div className="max-w-4xl mx-auto">
           <BookingForm onSubmit={handleGetTrip} />
@@ -213,13 +212,10 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
 
       {step === "list" && (
         <div className="max-w-screen-xl mx-auto">
-          {/* ... (phần JSX của step 'list' header và search bar giữ nguyên) */}
           <StepHeader currentStep={2} />
 
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-            {/* Left Column: Search Bar & Filters */}
             <div className="lg:col-span-1 lg:sticky lg:top-6 space-y-4">
-              {/* SearchBar giờ đây là công cụ duy nhất để tìm kiếm lại */}
               <SearchBar
                 date={formData?.time || ""}
                 destination={formData?.destination || ""}

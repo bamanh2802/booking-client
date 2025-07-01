@@ -12,20 +12,34 @@ export const getAllRequests = async (params?: Params) => {
   return response.data;
 };
 
-export const cancelTicket = async (
-  ticketId: string,
-): Promise<{ success: boolean }> => {
-  console.log("Cancelling ticket:", ticketId);
 
-  return Promise.resolve({ success: true });
-};
+export const createFastAction = async (
+  phone: string,
+  title: string
+) => {
+  const response = await axios.post(`${API_PATH}/quick-action`, {
+    phone, title
+  })
+  return response.data
+}
 
-// Hàm cập nhật trạng thái một yêu cầu
-export const updateRequestStatus = async (
-  requestId: string,
-  status: "Approved" | "Rejected",
-): Promise<{ success: boolean }> => {
-  console.log(`Updating request ${requestId} to status ${status}`);
+export const refundRequest = async (
+  userId: string,
+  amount: number,
+  reason: string
+) => {
+  const response = await axios.post(
+    `${API_PATH}/ticket-requests`,
+    {
+      userId,
+      titleRequest: "Refund Ticket",
+      amount,
+      reason
+    },
+    {
+      withCredentials: true,
+    },
+  );
 
-  return Promise.resolve({ success: true });
+  return response.data;
 };

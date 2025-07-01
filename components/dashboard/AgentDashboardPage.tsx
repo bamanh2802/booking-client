@@ -11,7 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { StatCard } from "./StatCard";
-import { ReportChart } from "./ReportChart"; // Đã cập nhật
+import { ReportChart } from "./ReportChart";
 
 import { selectCurrentUser } from "@/store/slices/authSlice";
 import { useAppSelector } from "@/lib/hook";
@@ -50,7 +50,6 @@ interface UserData {
 }
 
 const UserList = ({ users }: { users: User[] }) => {
-  // ... (giữ nguyên component này)
   if (users.length === 0) {
     return <p className="text-gray-500">Chưa có người dùng nào đăng ký.</p>;
   }
@@ -88,7 +87,6 @@ export default function AgentDashboardPage() {
   const user = useAppSelector(selectCurrentUser);
 
   useEffect(() => {
-    // ... (logic fetch data giữ nguyên)
     const fetchDashboardData = async () => {
       setIsLoading(true);
       try {
@@ -133,7 +131,7 @@ export default function AgentDashboardPage() {
       new Date(item.label).toLocaleDateString("vi-VN", {
         day: "2-digit",
         month: "2-digit",
-      }),
+      })
     );
 
     return {
