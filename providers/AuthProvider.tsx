@@ -97,7 +97,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         // Không cần setLoading ở đây vì initialState của Redux đã là true
         try {
           const userData = await getUserInfo();
-
           dispatch(setUser(userData.data));
         } catch (error) {
           // Nếu có lỗi (thường là 401), dọn dẹp state user

@@ -7,6 +7,7 @@ import { RootState } from "@/store"; // Giả sử bạn đã định nghĩa Roo
 // Interface cho dữ liệu người dùng
 export interface UserData {
   _id: string;
+  amount: number,
   email: string;
   fullName: string;
   phone: string;

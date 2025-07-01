@@ -6,20 +6,25 @@ import { useState } from "react";
 import BookingPage from "@/components/booking/BookingPage";
 import HeroSlider from "@/components/home/HeroSlider";
 import Footer from "@/components/home/Footer";
+import FloatingActionButtons from "@/components/common/FloatingActionButtons";
+import LoanSupport from "@/components/common/LoanSupport";
 
 export default function Page() {
   const [isSearching, setIsSearching] = useState(false);
 
-  // Hàm callback sẽ được truyền xuống BookingPage
   const handleStartSearch = () => {
     setIsSearching(true);
   };
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden bg-black">
+      {/* Các component nổi sẽ nằm ở đây để luôn hiển thị */}
+      <FloatingActionButtons />
+      <LoanSupport />
+
       <div
         className={`transition-all duration-700 ease-in-out ${
-          isSearching ? "h-0" : "h-full"
+          isSearching ? "h-0 opacity-0" : "h-full opacity-100"
         }`}
       >
         <HeroSlider />
@@ -33,7 +38,14 @@ export default function Page() {
         <BookingPage onSearch={handleStartSearch} />
       </div>
 
-      <Footer />
+      {/* Ẩn Footer đi khi đang tìm kiếm để có không gian */}
+      <div
+        className={`transition-opacity duration-500 ${
+          isSearching ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <Footer />
+      </div>
     </div>
   );
 }
