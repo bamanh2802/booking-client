@@ -8,7 +8,7 @@ import { BsTelephoneFill } from "react-icons/bs";
 import { MdReportProblem } from "react-icons/md";
 
 // Thay thế bằng SĐT và link Zalo của bạn
-const ZALO_LINK = "https://zalo.me/0388502397";
+const ZALO_LINK = "https://zalo.me/0975918797";
 const PHONE_NUMBER = "tel:0388502397";
 
 const FloatingActionButtons = () => {
