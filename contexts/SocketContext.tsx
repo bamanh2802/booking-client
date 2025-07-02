@@ -30,14 +30,15 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [socket, setSocket] = useState<SocketContextType>(null);
 
   useEffect(() => {
-    const SERVER_URL = "http://localhost:8080";
+    const SERVER_URL = "https://vexenay.com";
 
-    const SOCKET_IO_PATH = "/socket.io";
+    const SOCKET_IO_PATH = "/api/socket.io";
 
     console.log(
       `[Socket.IO] Attempting to connect to: ${SERVER_URL} with path: ${SOCKET_IO_PATH}`
     );
 
+    // 3. Khởi tạo socket với các tùy chọn chính xác
     const newSocket: Socket = io(SERVER_URL, {
       // Chỉ định đường dẫn của Socket.IO
       path: SOCKET_IO_PATH,
