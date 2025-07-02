@@ -42,7 +42,7 @@ interface RequestTableProps {
 export const RequestTable = ({
   requests,
   onUpdateRequest,
-  onViewDetails, // Nhận prop mới
+  onViewDetails,
 }: RequestTableProps) => {
   const renderCell = useCallback(
     (request: TicketRequest, columnKey: React.Key) => {
@@ -52,14 +52,19 @@ export const RequestTable = ({
             <div>
               <p className="font-semibold">{request.passengerName}</p>
               <p className="text-sm text-primary">
+                {/* Vẫn giữ optional chaining ở đây để tránh lỗi nếu tripInfo không tồn tại */}
                 {request.tripInfo?.location}
               </p>
-              <p className="text-xs text-gray-500">
-                {format(
-                  new Date(request.tripInfo?.startTime),
-                  "HH:mm dd/MM/yyyy",
-                )}
-              </p>
+              {/* SỬA LỖI Ở ĐÂY */}
+              {/* Chỉ render thẻ <p> và gọi format khi request.tripInfo.startTime có giá trị */}
+              {request.tripInfo?.startTime ? (
+                <p className="text-xs text-gray-500">
+                  {format(
+                    new Date(request.tripInfo.startTime),
+                    "HH:mm dd/MM/yyyy"
+                  )}
+                </p>
+              ) : null}
             </div>
           );
 
@@ -90,7 +95,6 @@ export const RequestTable = ({
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Request Actions">
-                  {/* Sửa lại hành động này */}
                   <DropdownItem key={1} onPress={() => onViewDetails(request)}>
                     Xem chi tiết
                   </DropdownItem>
@@ -103,7 +107,7 @@ export const RequestTable = ({
           return null;
       }
     },
-    [onUpdateRequest, onViewDetails],
+    [onUpdateRequest, onViewDetails]
   );
 
   return (

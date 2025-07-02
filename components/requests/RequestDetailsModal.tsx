@@ -92,28 +92,34 @@ export const RequestDetailsModal = ({
               </h3>
               <div className="p-4 bg-gray-50 rounded-lg">
                 <DetailRow label="Lộ trình">
-                  {request.tripInfo?.location}
+                  {request.tripInfo?.location || "Chưa có thông tin"}
                 </DetailRow>
                 <DetailRow label="Hành trình">
-                  {request.tripInfo?.station}
+                  {request.tripInfo?.station || "Chưa có thông tin"}
                 </DetailRow>
+                {/* SỬA LỖI Ở ĐÂY */}
                 <DetailRow label="Thời gian khởi hành">
-                  {format(
-                    new Date(request.tripInfo?.startTime),
-                    "HH:mm - dd/MM/yyyy",
-                  )}
+                  {request.tripInfo?.startTime
+                    ? format(
+                        new Date(request.tripInfo.startTime),
+                        "HH:mm - dd/MM/yyyy"
+                      )
+                    : "Chưa có thông tin"}
                 </DetailRow>
+                {/* SỬA LỖI Ở ĐÂY */}
                 <DetailRow label="Thời gian đến (dự kiến)">
-                  {format(
-                    new Date(request.tripInfo?.endTime),
-                    "HH:mm - dd/MM/yyyy",
-                  )}
+                  {request.tripInfo?.endTime
+                    ? format(
+                        new Date(request.tripInfo.endTime),
+                        "HH:mm - dd/MM/yyyy"
+                      )
+                    : "Chưa có thông tin"}
                 </DetailRow>
                 <DetailRow label="Nhà xe">
-                  {request.carCompanyInfo?.name}
+                  {request.carCompanyInfo?.name || "Chưa có thông tin"}
                 </DetailRow>
                 <DetailRow label="Hotline nhà xe">
-                  {request.carCompanyInfo?.hotline}
+                  {request.carCompanyInfo?.hotline || "Chưa có thông tin"}
                 </DetailRow>
               </div>
 

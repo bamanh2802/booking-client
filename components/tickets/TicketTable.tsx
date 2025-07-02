@@ -55,12 +55,15 @@ export const TicketTable = ({
               <p className="text-sm text-primary">
                 {ticket.tripInfo?.location}
               </p>
-              <p className="text-xs text-gray-500">
-                {format(
-                  new Date(ticket.tripInfo?.startTime),
-                  "HH:mm dd/MM/yyyy",
-                )}
-              </p>
+              {/* SỬA LỖI TẠI ĐÂY */}
+              {ticket.tripInfo?.startTime ? (
+                <p className="text-xs text-gray-500">
+                  {format(
+                    new Date(ticket.tripInfo.startTime),
+                    "HH:mm dd/MM/yyyy"
+                  )}
+                </p>
+              ) : null}
             </div>
           );
 
@@ -118,7 +121,7 @@ export const TicketTable = ({
           return null;
       }
     },
-    [onCancelTicket, onViewDetails],
+    [onCancelTicket, onViewDetails]
   );
 
   return (
