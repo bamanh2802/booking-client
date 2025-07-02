@@ -269,7 +269,7 @@ export function SeatMap({
               placeholder="Nhập họ tên"
               startContent={<span className="text-danger">*</span>}
               value={customer.name}
-              onValue-change={(v) => handleCustomerChange("name", v)}
+              onValueChange={(v) => handleCustomerChange("name", v)}
             />
             <Input
               errorMessage={customer.email ? emailError : undefined}
