@@ -20,7 +20,9 @@ export default function Page() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto">
+    <div
+      className={`relative min-h-screen  ${isSearching ? "overflow-hidden" : " overflow-y-auto"}`}
+    >
       <FloatingActionButtons />
       <LoanSupport />
 
@@ -29,7 +31,9 @@ export default function Page() {
           <HeroSlider />
           <div
             className={` inset-x-0 z-20 transition-all duration-700 ease-in-out ${
-              isSearching ? "top-0 h-full fixed" : "top-3/4 absolute"
+              isSearching
+                ? "top-0 h-full fixed overflow-auto"
+                : "top-3/4 absolute"
             }`}
           >
             <BookingPage onSearch={handleStartSearch} />

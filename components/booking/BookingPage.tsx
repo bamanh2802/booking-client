@@ -255,7 +255,6 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
                             </div>
                           )}
                           {!isDetailsLoading && selectedTripDetails && (
-                            // ... (JSX hiển thị SeatMap khi thành công giữ nguyên)
                             <>
                               <SeatMap
                                 booked={selectedTripDetails.bookedSeats}

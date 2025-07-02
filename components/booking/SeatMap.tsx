@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/select";
+// import { Select, SelectItem } from "@heroui/select"; // Không cần dùng Select nữa
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Tooltip } from "@heroui/tooltip";
@@ -74,11 +74,12 @@ export function SeatMap({
     setCustomer((prev) => ({ ...prev, [field]: value }));
   };
 
+  // --- MODIFIED: Cập nhật logic validation cho các trường input mới ---
   const isFormValid =
     selected.length > 0 &&
     customer.name.trim() !== "" &&
-    customer.pickup !== "" &&
-    customer.dropoff !== "" &&
+    customer.pickup.trim() !== "" && // Sửa ở đây
+    customer.dropoff.trim() !== "" && // Sửa ở đây
     !phoneError &&
     !emailError;
 
@@ -181,6 +182,7 @@ export function SeatMap({
   return (
     <>
       <div className="flex flex-col md:flex-row gap-6">
+        {/* Phần chọn ghế không thay đổi */}
         <Card className="flex-1">
           <CardBody className="p-4">
             <div className="flex flex-col sm:flex-row gap-6">
@@ -194,7 +196,6 @@ export function SeatMap({
                       <div className="grid grid-cols-4 gap-2 justify-items-center">
                         {floorArr.map((seat) => {
                           const status = getSeatStatus(seat);
-
                           return (
                             <Tooltip
                               key={`${seat.code}-${seat.floor}`}
@@ -207,7 +208,13 @@ export function SeatMap({
                             >
                               <Button
                                 isIconOnly
-                                className={`w-10 h-10 rounded-lg font-medium text-sm ${status === "booked" ? "bg-red-100 text-red-600 cursor-not-allowed" : status === "selected" ? "bg-yellow-400 text-yellow-800" : "bg-blue-100 text-blue-600 hover:bg-blue-200"}`}
+                                className={`w-10 h-10 rounded-lg font-medium text-sm ${
+                                  status === "booked"
+                                    ? "bg-red-100 text-red-600 cursor-not-allowed"
+                                    : status === "selected"
+                                      ? "bg-yellow-400 text-yellow-800"
+                                      : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                                }`}
                                 isDisabled={status === "booked" || isSubmitting}
                                 size="sm"
                                 onPress={() => handleClickSeat(seat)}
@@ -239,6 +246,7 @@ export function SeatMap({
           </CardBody>
         </Card>
 
+        {/* Phần form thông tin khách hàng đã được cập nhật */}
         <Card className="flex-1 p-6">
           <h3 className="font-semibold text-gray-700 mb-4">
             Thông tin khách hàng
@@ -261,7 +269,7 @@ export function SeatMap({
               placeholder="Nhập họ tên"
               startContent={<span className="text-danger">*</span>}
               value={customer.name}
-              onValueChange={(v) => handleCustomerChange("name", v)}
+              onValue-change={(v) => handleCustomerChange("name", v)}
             />
             <Input
               errorMessage={customer.email ? emailError : undefined}
@@ -272,36 +280,29 @@ export function SeatMap({
               value={customer.email}
               onValueChange={(v) => handleCustomerChange("email", v)}
             />
-            <div className="grid grid-cols-2 gap-2">
-              <Select
+
+            {/* --- MODIFIED: Thay thế Select bằng Input --- */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
                 isRequired
                 isDisabled={isSubmitting}
                 label="Điểm đón"
-                selectedKeys={
-                  customer.pickup ? new Set([customer.pickup]) : undefined
-                }
-                onSelectionChange={(keys) =>
-                  handleCustomerChange("pickup", Array.from(keys)[0] as string)
-                }
-              >
-                <SelectItem key="diem-don-a">Điểm đón A</SelectItem>
-                <SelectItem key="diem-don-b">Điểm đón B</SelectItem>
-              </Select>
-              <Select
+                placeholder="Nhập địa chỉ, tòa nhà,..."
+                startContent={<span className="text-danger">*</span>}
+                value={customer.pickup}
+                onValueChange={(v) => handleCustomerChange("pickup", v)}
+              />
+              <Input
                 isRequired
                 isDisabled={isSubmitting}
                 label="Điểm trả"
-                selectedKeys={
-                  customer.dropoff ? new Set([customer.dropoff]) : undefined
-                }
-                onSelectionChange={(keys) =>
-                  handleCustomerChange("dropoff", Array.from(keys)[0] as string)
-                }
-              >
-                <SelectItem key="diem-tra-x">Điểm trả X</SelectItem>
-                <SelectItem key="diem-tra-y">Điểm trả Y</SelectItem>
-              </Select>
+                placeholder="Nhập địa chỉ mong muốn,..."
+                startContent={<span className="text-danger">*</span>}
+                value={customer.dropoff}
+                onValueChange={(v) => handleCustomerChange("dropoff", v)}
+              />
             </div>
+
             <Button
               className="w-full"
               color="primary"

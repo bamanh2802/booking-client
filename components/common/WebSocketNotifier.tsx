@@ -53,10 +53,8 @@ export const WebSocketNotifier = () => {
   useEffect(() => {
     if (!socket) return;
 
-    // Hàm xử lý khi nhận được thông báo
     const handleReceiveNotification = (data: Notification) => {
       console.log("Received notification from server:", data);
-
       // Tạo một thông báo mới cho client với một ID duy nhất
       // Kết hợp targetId và timestamp để đảm bảo tính duy nhất
       const newNotification: ClientNotification = {

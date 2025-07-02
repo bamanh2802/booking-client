@@ -1,3 +1,3 @@
-export const API_PATH = "https://vexenay.com/api/v1";
-export const SOCKET_PATH = "https://vexenay.com/api/"
+export const API_PATH = "http://localhost:8080/v1";
+export const SOCKET_PATH = "http://localhost:8080"
 
