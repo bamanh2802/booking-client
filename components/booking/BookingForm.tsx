@@ -23,9 +23,10 @@ interface Location {
 const locations: Location[] = [
   { id: 1, name: "Hà Nội", key: "HN" },
   { id: 2, name: "Nghệ An", key: "NA" },
-  // Thêm các địa điểm khác nếu cần
   { id: 3, name: "Đà Nẵng", key: "DN" },
-  { id: 4, name: "TP. Hồ Chí Minh", key: "HCM" },
+  { id: 4, name: "Hà Tĩnh", key: "HT" },
+  { id: 5, name: "Kỳ Anh", key: "KA" },
+  { id: 6, name: "Quảng Bình", key: "QB" },
 ];
 
 export default function BookingForm({ onSubmit }: BookingFormProps) {
@@ -33,7 +34,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
   const [origin, setOrigin] = useState<string>("HN");
   const [destination, setDestination] = useState<string>("NA");
   const [selectedDate, setSelectedDate] = useState<DateValue>(
-    today(getLocalTimeZone()),
+    today(getLocalTimeZone())
   );
   const [error, setError] = useState("");
 
