@@ -14,12 +14,13 @@ import { today, getLocalTimeZone, parseDate } from "@internationalized/date";
 
 // --- Dữ liệu và Interfaces ---
 
-// Sử dụng lại danh sách địa điểm từ BookingForm
 const locations = [
   { id: 1, name: "Hà Nội", key: "HN" },
   { id: 2, name: "Nghệ An", key: "NA" },
   { id: 3, name: "Đà Nẵng", key: "DN" },
-  { id: 4, name: "TP. Hồ Chí Minh", key: "HCM" },
+  { id: 4, name: "Hà Tĩnh", key: "HT" },
+  { id: 5, name: "Kỳ Anh", key: "KA" },
+  { id: 6, name: "Quảng Bình", key: "QB" },
 ];
 
 interface SearchBarProps {
