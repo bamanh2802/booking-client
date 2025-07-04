@@ -72,8 +72,8 @@ export default function FastBookingForm() {
             Đặt Xe Nhanh
           </h3>
           <p className="text-center text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto">
-            Không có thời gian? Chỉ cần để lại số điện thoại, chúng tôi sẽ lo
-            phần còn lại!
+            Không cần đăng ký tài khoản hay đăng nhập - chỉ cần để lại số điện
+            thoại, chúng tôi sẽ gọi lại để hỗ trợ bạn đặt vé!
           </p>
           <form
             onSubmit={handleSubmit}

@@ -22,7 +22,7 @@ const CallBackForm = () => {
   return (
     <div className="mt-8 bg-white/10 backdrop-blur-sm p-6 rounded-lg">
       <p className="text-center text-white font-semibold mb-4">
-        Không cần phải đăng ký tài khoản hay đăng nhập, Hoặc để lại số điện
+        Không cần phải đăng ký tài khoản hay đăng nhập - Hãy để lại số điện
         thoại, chúng tôi sẽ gọi lại để hỗ trợ bạn đặt vé!
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
