@@ -115,6 +115,9 @@ export const Navbar = () => {
   const loading = useAppSelector(selectAuthLoading);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navItems = getNavItemsByRole(user?.roleName || null);
+  const showReferralOption =
+  (user?.roleName === Roles.CLIENT && !user?.parentId) ||
+  (user?.roleName && user.roleName !== Roles.CLIENT);
 
   const { logout } = useAuth();
   const {
@@ -154,13 +157,7 @@ export const Navbar = () => {
 
   // Component cho menu người dùng đã đăng nhập
   const UserSection = () => {
-    // ... logic dashboardHref giữ nguyên
-
-    // Điều kiện để hiển thị nút mã giới thiệu
-    const showReferralOption =
-      (user?.roleName === Roles.CLIENT && !user?.parentId) ||
-      (user?.roleName && user.roleName !== Roles.CLIENT);
-
+   
     return (
       <div className="flex items-center gap-4">
         {/* Chip nạp tiền */}
@@ -196,7 +193,6 @@ export const Navbar = () => {
               Hồ sơ của tôi
             </DropdownItem>
 
-            {/* THÊM MỤC MÃ GIỚI THIỆU */}
             {showReferralOption && (
               <DropdownItem key="referral" onPress={onReferralOpen}>
                 Mã giới thiệu
@@ -213,6 +209,7 @@ export const Navbar = () => {
   };
 
   const AuthSection = () => {
+
     if (loading) {
       return (
         <div className="flex items-center gap-2">
@@ -298,6 +295,17 @@ export const Navbar = () => {
                     Hồ sơ
                   </NextLink>
                 </NavbarMenuItem>
+
+                {showReferralOption && (
+              <NavbarMenuItem key="referral" onClick={onReferralOpen} >
+
+                <button
+                className="block w-full text-left text-lg">
+                Mã giới thiệu
+                </button>
+              </NavbarMenuItem>
+            )}
+                
                 <NavbarMenuItem>
                   <button
                     className="block w-full text-left text-lg text-danger"
