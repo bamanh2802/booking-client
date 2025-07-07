@@ -22,6 +22,7 @@ export const register = async (
   email: string,
   phone: string,
   password: string,
+  referralCode: string
 ) => {
   const response = await axios.post(
     `${API_PATH}/user/register`,
@@ -30,6 +31,7 @@ export const register = async (
       password,
       fullName,
       phone,
+      referralCode
     },
     {
       withCredentials: true,

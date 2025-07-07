@@ -29,6 +29,7 @@ export default function RegisterForm() {
     email: "",
     phone: "",
     password: "",
+    referralCode: "", // Thêm state cho mã giới thiệu
   });
   const [showPassword, setShowPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -80,7 +81,8 @@ export default function RegisterForm() {
         formData.fullName,
         formData.email,
         formData.phone,
-        formData.password
+        formData.password,
+        formData.referralCode 
       );
       setIsSuccessModalOpen(true);
     } catch (err: any) {
@@ -204,6 +206,13 @@ export default function RegisterForm() {
                   onValueChange={(v) => handleChange("password", v)}
                 />
 
+                {/* --- Input Mã Giới Thiệu (Tùy chọn) --- */}
+                <Input
+                  label="Mã giới thiệu (tùy chọn)"
+                  onValueChange={(v) => handleChange("referralCode", v)}
+                />
+                {/* -------------------------------------- */}
+                
                 <Checkbox
                   isSelected={agreedToTerms}
                   size="sm"
