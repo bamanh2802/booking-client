@@ -1,8 +1,8 @@
 // src/components/auth/RegisterForm.tsx
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect  } from "react";
+import { useRouter, useSearchParams  } from "next/navigation";
 import {
   Modal,
   ModalContent,
@@ -23,13 +23,15 @@ import { register } from "@/services/auth";
 export default function RegisterForm() {
   const router = useRouter();
 
+  const searchParams = useSearchParams(); 
+
   // --- States ---
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
-    referralCode: "", // Thêm state cho mã giới thiệu
+    referralCode: searchParams.get("ref") || "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -209,6 +211,7 @@ export default function RegisterForm() {
                 {/* --- Input Mã Giới Thiệu (Tùy chọn) --- */}
                 <Input
                   label="Mã giới thiệu (tùy chọn)"
+                  value={formData.referralCode}
                   onValueChange={(v) => handleChange("referralCode", v)}
                 />
                 {/* -------------------------------------- */}
