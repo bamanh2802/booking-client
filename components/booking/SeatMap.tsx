@@ -187,46 +187,68 @@ export function SeatMap({
           <CardBody className="p-4">
             <div className="flex flex-col sm:flex-row gap-6">
               {[floor1, floor2].map(
-                (floorArr, idx) =>
-                  floorArr.length > 0 && (
+                (floorArr, idx) => {
+                  if (floorArr.length === 0) return null;
+
+                  // 1. Nhóm các ghế theo cột (A, B, C, ...)
+                  const seatsByColumn = floorArr.reduce((acc, seat) => {
+                    const columnKey = seat.code.charAt(0); // Lấy ký tự đầu tiên (A, B)
+                    if (!acc[columnKey]) {
+                      acc[columnKey] = [];
+                    }
+                    acc[columnKey].push(seat);
+                    // Sắp xếp các ghế trong cột theo số thứ tự
+                    acc[columnKey].sort((a, b) => parseInt(a.code.slice(1)) - parseInt(b.code.slice(1)));
+                    return acc;
+                  }, {} as Record<string, Seat[]>);
+
+                  return (
                     <div key={idx} className="flex-1">
                       <h3 className="text-lg font-semibold text-foreground mb-4 text-center">
                         Tầng {idx + 1}
                       </h3>
-                      <div className="grid grid-cols-4 gap-2 justify-items-center">
-                        {floorArr.map((seat) => {
-                          const status = getSeatStatus(seat);
-                          return (
-                            <Tooltip
-                              key={`${seat.code}-${seat.floor}`}
-                              content={
-                                status === "booked"
-                                  ? "Đã đặt"
-                                  : `Ghế ${seat.code}`
-                              }
-                              placement="top"
-                            >
-                              <Button
-                                isIconOnly
-                                className={`w-10 h-10 rounded-lg font-medium text-sm ${
-                                  status === "booked"
-                                    ? "bg-red-100 text-red-600 cursor-not-allowed"
-                                    : status === "selected"
-                                      ? "bg-yellow-400 text-yellow-800"
-                                      : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                                }`}
-                                isDisabled={status === "booked" || isSubmitting}
-                                size="sm"
-                                onPress={() => handleClickSeat(seat)}
-                              >
-                                {seat.code}
-                              </Button>
-                            </Tooltip>
-                          );
-                        })}
+                      {/* 2. Render các cột ghế bằng flexbox */}
+                      <div className="flex justify-center gap-4 sm:gap-6">
+                        {/* Sắp xếp các cột theo thứ tự alphabet (A, B, ...) */}
+                        {Object.keys(seatsByColumn).sort().map((columnKey) => (
+                          // Mỗi cột là một flex container dọc
+                          <div key={columnKey} className="flex flex-col gap-2">
+                            {seatsByColumn[columnKey].map((seat) => {
+                              const status = getSeatStatus(seat);
+                              return (
+                                <Tooltip
+                                  key={`${seat.code}-${seat.floor}`}
+                                  content={
+                                    status === "booked"
+                                      ? "Đã đặt"
+                                      : `Ghế ${seat.code}`
+                                  }
+                                  placement="top"
+                                >
+                                  <Button
+                                    isIconOnly
+                                    className={`w-10 h-10 rounded-lg font-medium text-sm ${
+                                      status === "booked"
+                                        ? "bg-red-100 text-red-600 cursor-not-allowed"
+                                        : status === "selected"
+                                          ? "bg-yellow-400 text-yellow-800"
+                                          : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                                    }`}
+                                    isDisabled={status === "booked" || isSubmitting}
+                                    size="sm"
+                                    onPress={() => handleClickSeat(seat)}
+                                  >
+                                    {seat.code}
+                                  </Button>
+                                </Tooltip>
+                              );
+                            })}
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  )
+                  );
+                }
               )}
             </div>
             <div className="flex gap-4 mt-6 justify-center text-sm">
