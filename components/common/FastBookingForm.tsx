@@ -7,12 +7,14 @@ import { Button } from "@heroui/button";
 import { Phone, Send } from "lucide-react";
 import { addToast } from "@heroui/toast"; // Giả định bạn đã có hàm này
 import { createFastAction } from "@/services/requests";
+import { selectCurrentUser } from "@/store/slices/authSlice";
+import { useAppSelector } from "@/lib/hook";
 
 export default function FastBookingForm() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  // --- NEW: State để lưu lỗi validation phía client ---
   const [error, setError] = useState<string | null>(null);
+  const user = useAppSelector(selectCurrentUser);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,7 @@ export default function FastBookingForm() {
 
     setIsLoading(true);
     try {
-      await createFastAction(phoneNumber, "Assist Book Ticket");
+      await createFastAction(phoneNumber, "Assist Book Ticket", user._id);
 
       // --- NEW: Thông báo thành công ---
       addToast({

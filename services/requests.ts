@@ -15,10 +15,11 @@ export const getAllRequests = async (params?: Params) => {
 
 export const createFastAction = async (
   phone: string,
-  title: string
+  title: string,
+  userId: string
 ) => {
   const response = await axios.post(`${API_PATH}/quick-action`, {
-    phone, title
+    phone, title, userId
   })
   return response.data
 }

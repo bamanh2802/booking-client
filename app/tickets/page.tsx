@@ -1,4 +1,5 @@
-// src/pages/admin/tickets/page.tsx (hoặc đường dẫn tương ứng)
+// src/pages/admin/tickets/page.tsx
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -21,15 +22,15 @@ export default function TicketManagementPage() {
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
   const [searchQuery, setSearchQuery] = useState("");
 
-  // State quản lý modals
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  // --- STATE MANAGEMENT THAY ĐỔI ---
+  // Thay vì lưu cả object, chỉ cần lưu ID
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null); 
   const [ticketToCancel, setTicketToCancel] = useState<Ticket | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
   const fetchTickets = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Giả sử API có hỗ trợ tìm kiếm theo `query`
       const params = { page: pagination.page, query: searchQuery || undefined };
       const response = await getAllTickets(params);
 
@@ -57,7 +58,7 @@ export default function TicketManagementPage() {
   useEffect(() => {
     const handler = setTimeout(() => {
       fetchTickets();
-    }, 500); // Debounce để không gọi API mỗi khi gõ phím
+    }, 500);
 
     return () => clearTimeout(handler);
   }, [fetchTickets]);
@@ -66,18 +67,14 @@ export default function TicketManagementPage() {
     if (!ticketToCancel) return;
     setIsCancelling(true);
     try {
-      await cancelTicket(
-        ticketToCancel._id,
-        "Cancel Ticket",
-        ticketToCancel.seats
-      );
+      await cancelTicket(ticketToCancel._id, "Cancel Ticket", ticketToCancel.seats);
       addToast({
         title: "Thành công",
         description: "Đã hủy vé.",
         color: "success",
       });
       setTicketToCancel(null);
-      fetchTickets();
+      fetchTickets(); // Tải lại danh sách để cập nhật trạng thái
     } catch (err: any) {
       addToast({
         title: "Lỗi",
@@ -95,6 +92,7 @@ export default function TicketManagementPage() {
         <h1 className="text-3xl font-bold">Quản lý Vé</h1>
         <div className="w-full md:w-auto md:max-w-sm">
           <Input
+            isClearable
             label="Tìm kiếm vé"
             placeholder="Nhập tên, SĐT, mã vé..."
             startContent={<SearchIcon className="text-gray-400" />}
@@ -112,7 +110,8 @@ export default function TicketManagementPage() {
         <TicketTable
           tickets={tickets}
           onCancelTicket={setTicketToCancel}
-          onViewDetails={setSelectedTicket}
+          // Truyền hàm để set ID, không phải cả object
+          onViewDetails={(ticket) => setSelectedTicketId(ticket._id)}
         />
       )}
 
@@ -126,11 +125,12 @@ export default function TicketManagementPage() {
         </div>
       )}
 
-      {/* Modals */}
+      {/* --- MODALS --- */}
+      {/* Truyền ticketId thay vì cả object ticket */}
       <TicketDetailsModal
-        isOpen={!!selectedTicket}
-        ticket={selectedTicket}
-        onClose={() => setSelectedTicket(null)}
+        isOpen={!!selectedTicketId}
+        ticketId={selectedTicketId}
+        onClose={() => setSelectedTicketId(null)}
       />
       <CancelTicketConfirmModal
         isLoading={isCancelling}

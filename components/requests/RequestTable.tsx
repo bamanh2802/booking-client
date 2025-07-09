@@ -10,24 +10,17 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from "@heroui/dropdown";
 import { Button } from "@heroui/button";
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import { EyeIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 
 import { RequestStatusChip } from "./RequestStatusChip";
-
 import { TicketRequest } from "@/types";
 
-// --- THIẾT KẾ LẠI CÁC CỘT ---
+// Thiết kế lại các cột cho phù hợp
 const columns = [
-  { key: "passenger", label: "Hành khách & Chuyến đi" },
-  { key: "price", label: "Tổng tiền" },
+  { key: "requestInfo", label: "Thông tin Yêu cầu" },
+  { key: "amount", label: "Số tiền / Giá vé" },
   { key: "creator", label: "Người tạo" },
   { key: "status", label: "Trạng thái" },
   { key: "actions", label: " " },
@@ -35,49 +28,50 @@ const columns = [
 
 interface RequestTableProps {
   requests: TicketRequest[];
-  onUpdateRequest: (id: string, status: "Confirmed" | "Rejected") => void;
   onViewDetails: (request: TicketRequest) => void;
+  // onUpdateRequest: (id: string, status: "Confirmed" | "Rejected") => void;
 }
 
 export const RequestTable = ({
   requests,
-  onUpdateRequest,
   onViewDetails,
 }: RequestTableProps) => {
   const renderCell = useCallback(
     (request: TicketRequest, columnKey: React.Key) => {
       switch (columnKey) {
-        case "passenger":
+        case "requestInfo":
           return (
             <div>
-              <p className="font-semibold">{request.passengerName}</p>
-              <p className="text-sm text-primary">
-                {/* Vẫn giữ optional chaining ở đây để tránh lỗi nếu tripInfo không tồn tại */}
-                {request.tripInfo?.location}
-              </p>
-              {/* SỬA LỖI Ở ĐÂY */}
-              {/* Chỉ render thẻ <p> và gọi format khi request.tripInfo.startTime có giá trị */}
-              {request.tripInfo?.startTime ? (
-                <p className="text-xs text-gray-500">
-                  {format(
-                    new Date(request.tripInfo.startTime),
-                    "HH:mm dd/MM/yyyy"
-                  )}
+              <p className="font-semibold">{request.titleRequest}</p>
+              {request.titleRequest === "Book Ticket" ? (
+                <p className="text-sm text-primary">
+                  {request.passengerName} - {request.tripInfo?.location}
                 </p>
-              ) : null}
+              ) : (
+                <p className="text-sm text-gray-500 italic truncate w-48">
+                  {request.reason || "Yêu cầu hoàn tiền"}
+                </p>
+              )}
+               <p className="text-xs text-gray-500">
+                  {format(new Date(request.createdAt), "dd/MM/yyyy HH:mm")}
+                </p>
             </div>
           );
 
-        case "price":
-          return (
-            <span className="font-bold text-danger">
-              {request.price.toLocaleString("vi-VN")}đ
-            </span>
-          );
+        case "amount":
+            const value = request.price ?? request.amount;
+            return (
+              <span className="font-bold text-danger">
+                {value != null ? `${value.toLocaleString("vi-VN")}₫` : "N/A"}
+              </span>
+            );
 
         case "creator":
           return request.creatorInfo ? (
-            <p className="text-sm">{request.creatorInfo.fullName}</p>
+            <div>
+                 <p className="text-sm font-medium">{request.creatorInfo.fullName}</p>
+                 <p className="text-xs text-gray-500">{request.creatorRole?.roleName}</p>
+            </div>
           ) : (
             <p className="text-sm text-gray-500 italic">Khách tự đặt</p>
           );
@@ -88,18 +82,15 @@ export const RequestTable = ({
         case "actions":
           return (
             <div className="relative flex justify-end items-center">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button isIconOnly size="sm" variant="light">
-                    <EllipsisHorizontalIcon className="h-5 w-5 text-gray-500" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Request Actions">
-                  <DropdownItem key={1} onPress={() => onViewDetails(request)}>
-                    Xem chi tiết
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <Button 
+                isIconOnly 
+                size="sm" 
+                variant="light" 
+                onPress={() => onViewDetails(request)}
+                aria-label="Xem chi tiết"
+              >
+                <EyeIcon className="h-5 w-5 text-gray-500" />
+              </Button>
             </div>
           );
 
@@ -107,11 +98,11 @@ export const RequestTable = ({
           return null;
       }
     },
-    [onUpdateRequest, onViewDetails]
+    [onViewDetails]
   );
 
   return (
-    <Table aria-label="Bảng quản lý yêu cầu vé">
+    <Table aria-label="Bảng quản lý yêu cầu">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn

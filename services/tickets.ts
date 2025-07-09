@@ -12,6 +12,14 @@ export const getMyTickets = async (userId: string, params: Params) => {
   return response.data;
 };
 
+export const getTicketById = async(ticketId: string) => {
+  const response = await axios.get(`${API_PATH}/tickets/${ticketId}`, {
+    withCredentials: true
+  })
+
+  return response.data
+}
+
 
 export const getAllTickets = async (params?: Params) => {
   const response = await axios.get(`${API_PATH}/tickets`, {

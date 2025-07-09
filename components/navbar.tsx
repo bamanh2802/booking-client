@@ -4,12 +4,13 @@
 
 // React & Next.js imports
 import NextLink from "next/link";
+// **STEP 1: Import useRouter**
 import { useRouter, usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useDisclosure } from "@heroui/use-disclosure";
 import { WithdrawalModal } from "./common/WithdrawalModal";
 import { NotificationBell } from "./common/NotificationBell";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -48,8 +49,23 @@ import { Logo } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Chip } from "@heroui/chip";
 
-// --- Constants and Helper Functions ---
+// --- Type Definitions ---
+type NavItem = {
+  label: string;
+  href: string;
+  isDropdown?: false;
+};
 
+type NavDropdown = {
+  label: string;
+  isDropdown: true;
+  items: { label: string; href: string }[];
+};
+
+type NavigationLink = NavItem | NavDropdown;
+
+
+// --- Constants and Helper Functions ---
 const Roles = {
   ADMIN: "Admin",
   AGENT_LV1: "AgentLv1",
@@ -57,45 +73,51 @@ const Roles = {
   CLIENT: "Client",
 };
 
-const guestNavItems = [
+const guestNavItems: NavigationLink[] = [
   { label: "Trang chủ", href: "/" },
   { label: "Về chúng tôi", href: "/about" },
   { label: "Liên hệ", href: "/contact" },
 ];
 
-const clientNavItems = [
+const clientNavItems: NavigationLink[] = [
   { label: "Đặt vé", href: "/" },
   { label: "Lịch sử đặt vé", href: "/my-tickets" },
-  { label: "Yêu cầu", href: "/my-requests" },
+  { label: "Yêu cầu của tôi", href: "/my-requests" },
 ];
 
-const agent2NavItems = [
+const agentNavItems: NavigationLink[] = [
   { label: "Bảng điều khiển", href: "/agent" },
   { label: "Quản lý Khách hàng", href: "/users" },
-  { label: "Báo cáo Vé", href: "/requests" },
-  { label: "Vé đã đặt", href: "/tickets" },
+  {
+    label: "Yêu cầu",
+    isDropdown: true,
+    items: [
+      { label: "Yêu cầu của tôi", href: "/my-requests" },
+      { label: "Quản lý yêu cầu", href: "/requests" },
+    ],
+  },
+  {
+    label: "Vé",
+    isDropdown: true,
+    items: [
+      { label: "Vé của tôi", href: "/my-tickets" },
+      { label: "Quản lý vé", href: "/tickets" },
+    ],
+  },
 ];
 
-const agent1NavItems = [
-  { label: "Bảng điều khiển", href: "/agent" },
-  { label: "Quản lý Khách hàng", href: "/users" },
-  { label: "Yêu cầu", href: "/requests" },
-  { label: "Vé đã đặt", href: "/tickets" },
-];
-
-const adminNavItems = [
+const adminNavItems: NavigationLink[] = [
   { label: "Bảng điều khiển", href: "/admin/dashboard" },
   { label: "Quản lý hệ thống", href: "/admin/system" },
 ];
 
-const getNavItemsByRole = (role: string | null) => {
+const getNavItemsByRole = (role: string | null): NavigationLink[] => {
   switch (role) {
     case Roles.CLIENT:
       return clientNavItems;
-    case Roles.AGENT_LV2:
-      return agent2NavItems;
     case Roles.AGENT_LV1:
-      return agent1NavItems;
+    case Roles.AGENT_LV2:
+      return agentNavItems;
     case Roles.ADMIN:
       return adminNavItems;
     default:
@@ -107,17 +129,18 @@ const getNavItemsByRole = (role: string | null) => {
 
 export const Navbar = () => {
   const pathname = usePathname();
+  // **STEP 2: Initialize the router**
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectCurrentUser);
   const loading = useAppSelector(selectAuthLoading);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const navItems = getNavItemsByRole(user?.roleName || null);
   const showReferralOption =
-  (user?.roleName === Roles.CLIENT && !user?.parentId) ||
-  (user?.roleName && user.roleName !== Roles.CLIENT);
+    (user?.roleName === Roles.CLIENT && !user?.parentId) ||
+    (user?.roleName && user.roleName !== Roles.CLIENT);
 
   const { logout } = useAuth();
   const {
@@ -155,23 +178,16 @@ export const Navbar = () => {
     }).format(amount);
   };
 
-  // Component cho menu người dùng đã đăng nhập
   const UserSection = () => {
-   
     return (
       <div className="flex items-center gap-4">
-        {/* Chip nạp tiền */}
-        <Chip onClick={onWithdrawalOpen} className="font-bold cursor-pointer ">
+        <Chip onClick={onWithdrawalOpen} className="font-bold cursor-pointer">
           <div className="flex items-center justify-center">
             <PlusIcon className="w-4 h-4 mr-1" />
             {formatCurrency(user?.amount)}
           </div>
         </Chip>
-
-        {/* Chuông thông báo */}
         <NotificationBell />
-
-        {/* User Dropdown Menu */}
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
@@ -192,13 +208,11 @@ export const Navbar = () => {
             <DropdownItem key="settings" as={NextLink} href="/profile">
               Hồ sơ của tôi
             </DropdownItem>
-
             {showReferralOption && (
               <DropdownItem key="referral" onPress={onReferralOpen}>
                 Mã giới thiệu
               </DropdownItem>
             )}
-
             <DropdownItem key="logout" color="danger" onPress={handleLogout}>
               Đăng xuất
             </DropdownItem>
@@ -209,7 +223,6 @@ export const Navbar = () => {
   };
 
   const AuthSection = () => {
-
     if (loading) {
       return (
         <div className="flex items-center gap-2">
@@ -218,7 +231,6 @@ export const Navbar = () => {
         </div>
       );
     }
-
     return isAuthenticated ? <UserSection /> : <AuthButtons />;
   };
 
@@ -239,21 +251,67 @@ export const Navbar = () => {
               <p className="font-bold text-inherit">BookingCar</p>
             </NextLink>
           </NavbarBrand>
-          <ul className="hidden lg:flex gap-4 justify-start ml-2">
-            {navItems.map((item) => (
-              <NavbarItem key={item.href}>
-                <NextLink
-                  className={clsx(
-                    linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium",
-                    { "text-primary font-medium": pathname === item.href }
-                  )}
-                  href={item.href}
-                >
-                  {item.label}
-                </NextLink>
-              </NavbarItem>
-            ))}
+          <ul className="hidden lg:flex gap-4 justify-start items-center ml-2">
+            {navItems.map((item) => {
+              if ("items" in item) {
+                const isDropdownActive = item.items.some(
+                  (subItem) => pathname === subItem.href
+                );
+                return (
+                  <NavbarItem key={item.label}>
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <Button
+                          disableRipple
+                          className={clsx(
+                            linkStyles({ color: "foreground" }),
+                            "p-0 bg-transparent data-[hover=true]:bg-transparent",
+                            { "text-primary font-medium": isDropdownActive }
+                          )}
+                          endContent={<ChevronDownIcon className="w-4 h-4" />}
+                          radius="sm"
+                          variant="light"
+                        >
+                          {item.label}
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label={`${item.label} actions`}
+                        items={item.items}
+                      >
+                        {(subItem) => (
+                          // **STEP 3: Use onPress for navigation**
+                          <DropdownItem
+                            key={subItem.href}
+                            onPress={() => router.push(subItem.href)}
+                            className={clsx({
+                              "text-primary": pathname === subItem.href,
+                            })}
+                          >
+                            {subItem.label}
+                          </DropdownItem>
+                        )}
+                      </DropdownMenu>
+                    </Dropdown>
+                  </NavbarItem>
+                );
+              } else {
+                return (
+                  <NavbarItem key={item.label}>
+                    <NextLink
+                      className={clsx(
+                        linkStyles({ color: "foreground" }),
+                        "data-[active=true]:text-primary data-[active=true]:font-medium",
+                        { "text-primary font-medium": pathname === item.href }
+                      )}
+                      href={item.href}
+                    >
+                      {item.label}
+                    </NextLink>
+                  </NavbarItem>
+                );
+              }
+            })}
           </ul>
         </NavbarContent>
 
@@ -272,18 +330,51 @@ export const Navbar = () => {
           <NavbarMenuToggle aria-label="Mở / Đóng menu" />
         </NavbarContent>
 
+        {/* --- MOBILE MENU (No change needed here as it uses NextLink directly) --- */}
         <NavbarMenu>
           <div className="mx-4 mt-2 flex flex-col gap-2">
-            {navItems.map((item, index) => (
-              <NavbarMenuItem key={`${item.label}-${index}`}>
-                <NextLink
-                  className="block w-full text-lg text-foreground"
-                  href={item.href}
-                >
-                  {item.label}
-                </NextLink>
-              </NavbarMenuItem>
-            ))}
+            {navItems.map((item, index) => {
+              if ("items" in item) {
+                return (
+                  <div key={`${item.label}-${index}`} className="flex flex-col gap-2">
+                    <NavbarMenuItem>
+                      <p className="font-semibold text-default-600">{item.label}</p>
+                    </NavbarMenuItem>
+                    {item.items.map((subItem, subIndex) => (
+                      <NavbarMenuItem key={`${subItem.label}-${subIndex}`}>
+                        <NextLink
+                          href={subItem.href}
+                          className={clsx(
+                            "block w-full text-lg pl-4",
+                            pathname === subItem.href
+                              ? "text-primary font-medium"
+                              : "text-foreground"
+                          )}
+                        >
+                          {subItem.label}
+                        </NextLink>
+                      </NavbarMenuItem>
+                    ))}
+                  </div>
+                );
+              } else {
+                return (
+                  <NavbarMenuItem key={`${item.label}-${index}`}>
+                    <NextLink
+                      className={clsx(
+                        "block w-full text-lg",
+                        pathname === item.href
+                          ? "text-primary font-medium"
+                          : "text-foreground"
+                      )}
+                      href={item.href}
+                    >
+                      {item.label}
+                    </NextLink>
+                  </NavbarMenuItem>
+                );
+              }
+            })}
             <div className="my-2 border-t border-default-200" />
             {isAuthenticated ? (
               <>
@@ -295,17 +386,13 @@ export const Navbar = () => {
                     Hồ sơ
                   </NextLink>
                 </NavbarMenuItem>
-
                 {showReferralOption && (
-              <NavbarMenuItem key="referral" onClick={onReferralOpen} >
-
-                <button
-                className="block w-full text-left text-lg">
-                Mã giới thiệu
-                </button>
-              </NavbarMenuItem>
-            )}
-                
+                  <NavbarMenuItem key="referral" onClick={onReferralOpen}>
+                    <button className="block w-full text-left text-lg">
+                      Mã giới thiệu
+                    </button>
+                  </NavbarMenuItem>
+                )}
                 <NavbarMenuItem>
                   <button
                     className="block w-full text-left text-lg text-danger"

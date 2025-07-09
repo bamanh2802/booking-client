@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Input } from "@heroui/input";
-// import { Select, SelectItem } from "@heroui/select"; // Không cần dùng Select nữa
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Tooltip } from "@heroui/tooltip";
@@ -74,12 +73,11 @@ export function SeatMap({
     setCustomer((prev) => ({ ...prev, [field]: value }));
   };
 
-  // --- MODIFIED: Cập nhật logic validation cho các trường input mới ---
   const isFormValid =
     selected.length > 0 &&
     customer.name.trim() !== "" &&
-    customer.pickup.trim() !== "" && // Sửa ở đây
-    customer.dropoff.trim() !== "" && // Sửa ở đây
+    customer.pickup.trim() !== "" &&
+    customer.dropoff.trim() !== "" &&
     !phoneError &&
     !emailError;
 
@@ -182,7 +180,6 @@ export function SeatMap({
   return (
     <>
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Phần chọn ghế không thay đổi */}
         <Card className="flex-1">
           <CardBody className="p-4">
             <div className="flex flex-col sm:flex-row gap-6">
@@ -190,14 +187,12 @@ export function SeatMap({
                 (floorArr, idx) => {
                   if (floorArr.length === 0) return null;
 
-                  // 1. Nhóm các ghế theo cột (A, B, C, ...)
                   const seatsByColumn = floorArr.reduce((acc, seat) => {
-                    const columnKey = seat.code.charAt(0); // Lấy ký tự đầu tiên (A, B)
+                    const columnKey = seat.code.charAt(0);
                     if (!acc[columnKey]) {
                       acc[columnKey] = [];
                     }
                     acc[columnKey].push(seat);
-                    // Sắp xếp các ghế trong cột theo số thứ tự
                     acc[columnKey].sort((a, b) => parseInt(a.code.slice(1)) - parseInt(b.code.slice(1)));
                     return acc;
                   }, {} as Record<string, Seat[]>);
@@ -207,11 +202,8 @@ export function SeatMap({
                       <h3 className="text-lg font-semibold text-foreground mb-4 text-center">
                         Tầng {idx + 1}
                       </h3>
-                      {/* 2. Render các cột ghế bằng flexbox */}
                       <div className="flex justify-center gap-4 sm:gap-6">
-                        {/* Sắp xếp các cột theo thứ tự alphabet (A, B, ...) */}
                         {Object.keys(seatsByColumn).sort().map((columnKey) => (
-                          // Mỗi cột là một flex container dọc
                           <div key={columnKey} className="flex flex-col gap-2">
                             {seatsByColumn[columnKey].map((seat) => {
                               const status = getSeatStatus(seat);
@@ -268,7 +260,6 @@ export function SeatMap({
           </CardBody>
         </Card>
 
-        {/* Phần form thông tin khách hàng đã được cập nhật */}
         <Card className="flex-1 p-6">
           <h3 className="font-semibold text-gray-700 mb-4">
             Thông tin khách hàng
@@ -303,7 +294,6 @@ export function SeatMap({
               onValueChange={(v) => handleCustomerChange("email", v)}
             />
 
-            {/* --- MODIFIED: Thay thế Select bằng Input --- */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 isRequired

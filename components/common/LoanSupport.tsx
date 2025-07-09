@@ -17,6 +17,8 @@ import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { addToast } from "@heroui/toast";
 import { createFastAction } from "@/services/requests";
+import { selectCurrentUser } from "@/store/slices/authSlice";
+import { useAppSelector } from "@/lib/hook";
 
 import { MdLocationOn, MdPhone, MdSend, MdClose } from "react-icons/md";
 import { FaMoneyBillWave, FaHandshake } from "react-icons/fa";
@@ -30,6 +32,7 @@ const LoanSupport = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
+  const user = useAppSelector(selectCurrentUser);
 
   const regionData = {
     "Miền Bắc": {
@@ -70,7 +73,7 @@ const LoanSupport = () => {
 
     setIsLoading(true);
     try {
-      await createFastAction(phoneNumber, `Quick Loan`);
+      await createFastAction(phoneNumber, `Quick Loan`, user._id);
 
       addToast({
         title: "Yêu cầu đã được gửi!",

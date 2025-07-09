@@ -198,8 +198,8 @@ export default function MyTicketsPage() {
       />
       <TicketDetailsModal
         isOpen={!!viewingTicket}
-        ticket={viewingTicket}
         onClose={() => setViewingTicket(null)}
+        ticketId={viewingTicket?._id}
       />
     </div>
   );

@@ -37,7 +37,7 @@ export const TicketCard = ({
     <Card className="w-full">
       <CardHeader className="flex justify-between items-center">
         <div className="flex flex-col">
-          <p className="text-md font-semibold">{ticket.tripInfo.station}</p>
+          <p className="text-md font-semibold">{ticket.tripInfo?.station}</p>
           <p className="text-sm text-gray-500">
             Hành khách: {ticket.passengerName}
           </p>
@@ -50,17 +50,27 @@ export const TicketCard = ({
       <CardBody className="space-y-3">
         <div className="flex justify-between">
           <span className="text-gray-600">Ngày đi:</span>
-          {/* SỬA LẠI: Dùng new Date() để parse chuỗi thời gian */}
           <span className="font-semibold">
-            {format(new Date(ticket.tripInfo.startTime), "EEEE, dd/MM/yyyy", {
+          {ticket.tripInfo?.startTime ? (
+            format(new Date(ticket.tripInfo.startTime), "EEEE, dd/MM/yyyy", {
               locale: vi,
-            })}
+            })
+          ) : (
+            "Chưa xác định thời gian"
+          )}
+
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-600">Giờ đi:</span>
           <span className="font-semibold">
-            {format(new Date(ticket.tripInfo.startTime), "HH:mm")}
+            {
+              ticket.tripInfo?.startTime ? (
+            format(new Date(ticket.tripInfo?.startTime), "HH:mm")
+              ) : (
+            "Chưa xác định thời gian"
+              )
+            }
           </span>
         </div>
         <div className="flex justify-between">
@@ -72,7 +82,7 @@ export const TicketCard = ({
         <div className="flex justify-between">
           <span className="text-gray-600">Tổng tiền:</span>
           <span className="font-bold text-danger">
-            {ticket.tripInfo.price.toLocaleString("vi-VN")}đ
+            {ticket.tripInfo?.price.toLocaleString("vi-VN")}đ
           </span>
         </div>
       </CardBody>

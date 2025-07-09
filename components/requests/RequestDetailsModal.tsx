@@ -1,5 +1,4 @@
 // src/components/requests/RequestDetailsModal.tsx
-"use client";
 
 import {
   Modal,
@@ -7,149 +6,120 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ModalProps,
 } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
-import { Chip } from "@heroui/chip";
 import { format } from "date-fns";
-import React from "react";
-
+import { TicketRequest } from "@/types";
 import { RequestStatusChip } from "./RequestStatusChip";
 
-import { TicketRequest } from "@/types";
-
-const DetailRow = ({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) => (
-  <div className="flex justify-between items-start py-2">
-    <p className="text-sm text-gray-500">{label}</p>
-    <div className="text-right font-medium text-gray-800">{children}</div>
-  </div>
-);
-
-interface RequestDetailsModalProps extends Omit<ModalProps, "children"> {
+interface RequestDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   request: TicketRequest | null;
+  // Thêm các hàm xử lý hành động nếu cần
+  // onUpdateRequest: (id: string, status: "Confirmed" | "Rejected") => void;
 }
 
+// Helper component để hiển thị một cặp thông tin
+const InfoRow = ({ label, value }: { label: string; value?: React.ReactNode }) => {
+  if (!value) return null;
+  return (
+    <div className="grid grid-cols-3 gap-2 py-1">
+      <dt className="text-sm font-medium text-gray-500">{label}</dt>
+      <dd className="col-span-2 text-sm text-gray-900 dark:text-gray-200">{value}</dd>
+    </div>
+  );
+};
+
 export const RequestDetailsModal = ({
+  isOpen,
+  onClose,
   request,
-  ...props
 }: RequestDetailsModalProps) => {
   if (!request) return null;
 
+  const renderContent = () => {
+    // Render nội dung dựa trên loại yêu cầu
+    if (request.titleRequest === "Book Ticket") {
+      return (
+        <>
+          <h3 className="font-semibold text-lg mb-2">Thông tin Chuyến đi</h3>
+          <dl>
+            <InfoRow label="Hành trình" value={request.tripInfo?.location} />
+            <InfoRow label="Bến xe" value={request.tripInfo?.station} />
+            <InfoRow label="Khởi hành" value={request.tripInfo?.startTime && format(new Date(request.tripInfo.startTime), "HH:mm dd/MM/yyyy")} />
+            <InfoRow label="Nhà xe" value={request.carCompanyInfo?.name} />
+            <InfoRow label="Hotline nhà xe" value={request.carCompanyInfo?.hotline} />
+          </dl>
+          <Divider className="my-4" />
+          <h3 className="font-semibold text-lg mb-2">Chi tiết Vé</h3>
+          <dl>
+            <InfoRow label="Hành khách" value={request.passengerName} />
+            <InfoRow label="SĐT Hành khách" value={request.passengerPhone} />
+            <InfoRow label="Ghế đã chọn" value={request.seats?.map(s => s.code).join(", ")} />
+            <InfoRow label="Tổng tiền" value={<span className="font-bold text-danger">{request.price?.toLocaleString("vi-VN")}đ</span>} />
+          </dl>
+        </>
+      );
+    }
+
+    if (request.titleRequest === "Refund Ticket") {
+      return (
+        <>
+          <h3 className="font-semibold text-lg mb-2">Thông tin Hoàn tiền</h3>
+          <dl>
+            <InfoRow label="Số tiền yêu cầu" value={<span className="font-bold text-danger">{request.amount?.toLocaleString("vi-VN")}đ</span>}/>
+            <InfoRow label="Lý do" value={request.reason} />
+            <InfoRow label="Mã vé (nếu có)" value={request.ticketId} />
+          </dl>
+        </>
+      );
+    }
+    
+    // Fallback cho các loại request khác
+    return <p>Không có thông tin chi tiết cho loại yêu cầu này.</p>;
+  };
+
   return (
-    <Modal scrollBehavior="inside" size="2xl" {...props}>
+    <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
       <ModalContent>
-        {(onClose) => (
+        {(close) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
               Chi tiết Yêu cầu
-              <span className="text-sm font-normal text-gray-500">
-                ID: #{request._id.slice(-8).toUpperCase()}
-              </span>
+              <span className="text-xs font-normal text-gray-500">ID: {request._id}</span>
             </ModalHeader>
             <ModalBody>
-              {/* Phần 1: Thông tin hành khách & vé */}
-              <h3 className="text-lg font-semibold text-primary mb-2">
-                Thông tin Hành khách
-              </h3>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <DetailRow label="Tên hành khách">
-                  {request.passengerName}
-                </DetailRow>
-                <DetailRow label="Số điện thoại">
-                  {request.passengerPhone}
-                </DetailRow>
-                <DetailRow label="Ghế đã chọn">
-                  <div className="flex gap-1 justify-end">
-                    {request.seats.map((s) => (
-                      <Chip key={s.code} size="sm">
-                        {s.code}
-                      </Chip>
-                    ))}
-                  </div>
-                </DetailRow>
-                <DetailRow label="Tổng tiền">
-                  <span className="text-danger font-bold text-lg">
-                    {request.price.toLocaleString("vi-VN")}đ
-                  </span>
-                </DetailRow>
-                <DetailRow label="Trạng thái">
-                  <RequestStatusChip status={request.status} />
-                </DetailRow>
+              <div className="mb-4">
+                 <h3 className="font-semibold text-lg mb-2">Thông tin chung</h3>
+                 <dl>
+                    <InfoRow label="Loại yêu cầu" value={<span className="font-semibold">{request.titleRequest}</span>} />
+                    <InfoRow label="Trạng thái" value={<RequestStatusChip status={request.status} />} />
+                    {request.creatorInfo ? (
+                        <InfoRow label="Người tạo" value={`${request.creatorInfo.fullName} (${request.creatorRole?.roleName || 'N/A'})`} />
+                    ) : (
+                        <InfoRow label="Người tạo" value="Khách hàng tự đặt" />
+                    )}
+                    <InfoRow label="Ngày tạo" value={format(new Date(request.createdAt), "HH:mm dd/MM/yyyy")} />
+                 </dl>
               </div>
-
               <Divider className="my-4" />
-
-              {/* Phần 2: Thông tin chuyến đi & nhà xe */}
-              <h3 className="text-lg font-semibold text-primary mb-2">
-                Thông tin Chuyến đi
-              </h3>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <DetailRow label="Lộ trình">
-                  {request.tripInfo?.location || "Chưa có thông tin"}
-                </DetailRow>
-                <DetailRow label="Hành trình">
-                  {request.tripInfo?.station || "Chưa có thông tin"}
-                </DetailRow>
-                {/* SỬA LỖI Ở ĐÂY */}
-                <DetailRow label="Thời gian khởi hành">
-                  {request.tripInfo?.startTime
-                    ? format(
-                        new Date(request.tripInfo.startTime),
-                        "HH:mm - dd/MM/yyyy"
-                      )
-                    : "Chưa có thông tin"}
-                </DetailRow>
-                {/* SỬA LỖI Ở ĐÂY */}
-                <DetailRow label="Thời gian đến (dự kiến)">
-                  {request.tripInfo?.endTime
-                    ? format(
-                        new Date(request.tripInfo.endTime),
-                        "HH:mm - dd/MM/yyyy"
-                      )
-                    : "Chưa có thông tin"}
-                </DetailRow>
-                <DetailRow label="Nhà xe">
-                  {request.carCompanyInfo?.name || "Chưa có thông tin"}
-                </DetailRow>
-                <DetailRow label="Hotline nhà xe">
-                  {request.carCompanyInfo?.hotline || "Chưa có thông tin"}
-                </DetailRow>
-              </div>
-
-              {/* Phần 3: Thông tin người tạo */}
-              {request.creatorInfo && (
-                <>
-                  <Divider className="my-4" />
-                  <h3 className="text-lg font-semibold text-primary mb-2">
-                    Thông tin Người tạo
-                  </h3>
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <DetailRow label="Tên người tạo">
-                      {request.creatorInfo.fullName}
-                    </DetailRow>
-                    <DetailRow label="Email">
-                      {request.creatorInfo.email}
-                    </DetailRow>
-                    <DetailRow label="Vai trò">
-                      <Chip color="secondary" size="sm">
-                        {request.creatorRole?.roleName}
-                      </Chip>
-                    </DetailRow>
-                  </div>
-                </>
-              )}
+              {renderContent()}
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" variant="light" onPress={onClose}>
+              <Button color="danger" variant="light" onPress={close}>
                 Đóng
               </Button>
+              {/* Thêm các nút hành động ở đây nếu cần */}
+              {/* Ví dụ:
+              {request.status === 'Pending' && (
+                <>
+                  <Button color="danger" onPress={() => onUpdateRequest(request._id, 'Rejected')}>Từ chối</Button>
+                  <Button color="primary" onPress={() => onUpdateRequest(request._id, 'Confirmed')}>Xác nhận</Button>
+                </>
+              )} 
+              */}
             </ModalFooter>
           </>
         )}
