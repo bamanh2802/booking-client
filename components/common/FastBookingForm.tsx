@@ -28,7 +28,7 @@ export default function FastBookingForm() {
 
     setIsLoading(true);
     try {
-      await createFastAction(phoneNumber, "Assist Book Ticket", user._id);
+      await createFastAction(phoneNumber, "Assist Book Ticket", user?._id);
 
       // --- NEW: Thông báo thành công ---
       addToast({

@@ -125,8 +125,6 @@ export default function TicketManagementPage() {
         </div>
       )}
 
-      {/* --- MODALS --- */}
-      {/* Truyền ticketId thay vì cả object ticket */}
       <TicketDetailsModal
         isOpen={!!selectedTicketId}
         ticketId={selectedTicketId}

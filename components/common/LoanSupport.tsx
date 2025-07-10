@@ -73,7 +73,7 @@ const LoanSupport = () => {
 
     setIsLoading(true);
     try {
-      await createFastAction(phoneNumber, `Quick Loan`, user._id);
+      await createFastAction(phoneNumber, `Quick Loan`, user?._id);
 
       addToast({
         title: "Yêu cầu đã được gửi!",
