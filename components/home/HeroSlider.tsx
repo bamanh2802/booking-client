@@ -15,17 +15,17 @@ const slides: Slide[] = [
   {
     id: 1,
     title: "Đặt Xe Sang Trọng",
-    bgImage: "assets/hero/banner.jpg",
+    bgImage: "assets/hero/banner1.jpg",
   },
   {
     id: 2,
     title: "Đặt Xe Nhanh Chóng",
-    bgImage: "assets/hero/banner.jpg",
+    bgImage: "assets/hero/banner1.jpg",
   },
   {
     id: 3,
     title: "An Toàn & Tin Cậy",
-    bgImage: "assets/hero/banner.jpg",
+    bgImage: "assets/hero/banner1.jpg",
   },
 ];
 

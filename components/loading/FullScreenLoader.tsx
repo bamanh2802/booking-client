@@ -17,7 +17,10 @@ export const FullScreenLoader = () => {
       "
     >
       <div className="flex flex-col items-center gap-6">
-        <Logo size={80} />
+  
+  <img src="/assets/logo.png" alt="VeXeNay Logo" className="h-64 w-auto" />
+
+
 
         <Spinner
           color="primary"
