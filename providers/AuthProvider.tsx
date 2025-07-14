@@ -89,20 +89,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setIsMounted(true);
   }, []);
 
-  // Logic kiểm tra trạng thái đăng nhập khi ứng dụng khởi động
   useEffect(() => {
-    // Chỉ chạy khi component đã được mount trên client
     if (isMounted) {
       const checkAuthenticationStatus = async () => {
-        // Không cần setLoading ở đây vì initialState của Redux đã là true
         try {
           const userData = await getUserInfo();
           dispatch(setUser(userData.data));
         } catch (error) {
-          // Nếu có lỗi (thường là 401), dọn dẹp state user
           dispatch(clearUser());
         } finally {
-          // Dù thành công hay thất bại, cũng tắt trạng thái loading chung
           dispatch(setLoading(false));
         }
       };

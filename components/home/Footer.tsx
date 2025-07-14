@@ -8,9 +8,9 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <h3 className="text-2xl font-bold mb-4">VeXeRe</h3>
+            <h3 className="text-2xl font-bold mb-4">VeXeNay</h3>
             <p className="text-gray-300 text-lg">
-              Đặt vé xe bus trực tuyến nhanh chóng, tiện lợi
+              Đặt vé xe khách trực tuyến nhanh chóng, tiện lợi
             </p>
           </div>
 

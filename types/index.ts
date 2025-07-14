@@ -251,3 +251,11 @@ export interface PaginatedNotifications {
     totalPages: number;
   };
 }
+
+export interface BankAccountData {
+  _id: string;
+  userId: string;
+  accountNumber: string;
+  bankName: string;
+  accountHolderName: string;
+}
