@@ -55,7 +55,7 @@ export default function HeroSlider() {
 
   return (
     <div
-      className="relative w-full  min-h-[250px] sm:h-[500px] md:h-[600px] lg:h-[650px] xl:h-[700px] overflow-hidden group"
+      className="relative w-full  min-h-[250px] sm:h-[500px] md:h-[600px] lg:h-[650px] xl:h-[750px] overflow-hidden group"
       onMouseEnter={() => setAutoplay(false)}
       onMouseLeave={() => setAutoplay(true)}
     >
@@ -68,13 +68,14 @@ export default function HeroSlider() {
               index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
           >
-            <img
-              src={slide.bgImage}
-              alt={slide.title}
-              className="h-full w-full object-cover object-center"
-            />
-            {/* Overlay tối để text dễ đọc hơn */}
-            <div className="absolute inset-0 "></div>
+            <div className="w-full h-full">
+              <img
+                src={slide.bgImage}
+                alt={slide.title}
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0" />
+            </div>
           </div>
         ))}
       </div>
