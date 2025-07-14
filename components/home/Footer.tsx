@@ -18,24 +18,24 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Liên Hệ</h4>
             <div className="space-y-3">
               <a
-                href="tel:0388502397"
+                href="tel:0975918797"
                 className="flex items-center justify-center md:justify-end gap-2 text-gray-300 hover:text-white transition-colors group"
               >
                 <Phone
                   size={20}
                   className="group-hover:scale-110 transition-transform"
                 />
-                <span className="text-lg font-medium">0388 502 397</span>
+                <span className="text-lg font-medium">0975 918 797</span>
               </a>
               <a
-                href="mailto:info@vexere.com"
+                href="mailto:thanhdia1995@gmail.com"
                 className="flex items-center justify-center md:justify-end gap-2 text-gray-300 hover:text-white transition-colors group"
               >
                 <Mail
                   size={20}
                   className="group-hover:scale-110 transition-transform"
                 />
-                <span>info@vexere.com</span>
+                <span>thanhdia1995@gmail.com</span>
               </a>
             </div>
           </div>
