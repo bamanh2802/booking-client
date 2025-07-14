@@ -328,11 +328,23 @@ export const Navbar = () => {
         </NavbarContent>
 
         <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+          {/* Mobile: Show user balance chip when authenticated */}
+          {isAuthenticated && user && (
+            <Chip
+              onClick={onWithdrawalOpen}
+              className="font-bold cursor-pointer mr-2"
+            >
+              <div className="flex items-center justify-center">
+                <PlusIcon className="w-4 h-4 mr-1" />
+                {formatCurrency(user?.amount)}
+              </div>
+            </Chip>
+          )}
           <ThemeSwitch />
           <NavbarMenuToggle aria-label="Mở / Đóng menu" />
         </NavbarContent>
 
-        {/* --- MOBILE MENU (No change needed here as it uses NextLink directly) --- */}
+        {/* --- MOBILE MENU --- */}
         <NavbarMenu>
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {navItems.map((item, index) => {

@@ -18,12 +18,7 @@ export const useBankAccount = (userId?: string) => {
       const account = await getBankAccountByUserId(userId);
       setBankAccount(account.data);
     } catch (error) {
-      console.error("Lỗi khi lấy thông tin tài khoản:", error);
-      addToast({
-        title: "Lỗi",
-        description: "Không thể tải thông tin tài khoản ngân hàng.",
-        color: "danger",
-      });
+   
     } finally {
       setIsLoading(false);
     }
