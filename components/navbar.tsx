@@ -64,7 +64,6 @@ type NavDropdown = {
 
 type NavigationLink = NavItem | NavDropdown;
 
-
 // --- Constants and Helper Functions ---
 const Roles = {
   ADMIN: "Admin",
@@ -244,13 +243,15 @@ export const Navbar = () => {
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
-  className="flex justify-start items-center gap-1"
-  href="/"
->
-  <img src="/assets/logo.png" alt="VeXeNay Logo" className="h-10 w-auto" />
-  <p className="font-bold text-inherit">VeXeNay</p>
-</NextLink>
-
+              className="flex justify-start items-center gap-1"
+              href="/"
+            >
+              <img
+                src="/assets/logo.png"
+                alt="VeXeNay Logo"
+                className="h-10 w-auto"
+              />
+            </NextLink>
           </NavbarBrand>
           <ul className="hidden lg:flex gap-4 justify-start items-center ml-2">
             {navItems.map((item) => {
@@ -337,9 +338,14 @@ export const Navbar = () => {
             {navItems.map((item, index) => {
               if ("items" in item) {
                 return (
-                  <div key={`${item.label}-${index}`} className="flex flex-col gap-2">
+                  <div
+                    key={`${item.label}-${index}`}
+                    className="flex flex-col gap-2"
+                  >
                     <NavbarMenuItem>
-                      <p className="font-semibold text-default-600">{item.label}</p>
+                      <p className="font-semibold text-default-600">
+                        {item.label}
+                      </p>
                     </NavbarMenuItem>
                     {item.items.map((subItem, subIndex) => (
                       <NavbarMenuItem key={`${subItem.label}-${subIndex}`}>
