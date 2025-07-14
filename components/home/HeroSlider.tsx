@@ -18,12 +18,7 @@ const slides: Slide[] = [
   {
     id: 2,
     title: "Đặt Xe Nhanh Chóng",
-    bgImage: "assets/hero/banner1.jpg",
-  },
-  {
-    id: 3,
-    title: "An Toàn & Tin Cậy",
-    bgImage: "assets/hero/banner1.jpg",
+    bgImage: "assets/hero/banner.jpg",
   },
 ];
 
@@ -39,7 +34,7 @@ export default function HeroSlider() {
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [autoplay]);
+  }, [autoplay, slides.length]);
 
   const goToPrevious = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
@@ -78,10 +73,10 @@ export default function HeroSlider() {
         ))}
       </div>
 
-      {/* Nút điều hướng - ẩn trên mobile, hiện từ tablet trở lên */}
+      {/* Nút điều hướng */}
       <button
         aria-label="Slide trước"
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300 opacity-0 group-hover:opacity-100 z-10  sm:flex"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300 opacity-0 group-hover:opacity-100 z-10 sm:flex"
         onClick={goToPrevious}
       >
         <ChevronLeft size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
@@ -89,13 +84,13 @@ export default function HeroSlider() {
 
       <button
         aria-label="Slide tiếp theo"
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300 opacity-0 group-hover:opacity-100 z-10  sm:flex"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300 opacity-0 group-hover:opacity-100 z-10 sm:flex"
         onClick={goToNext}
       >
         <ChevronRight size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
       </button>
 
-      {/* Chỉ báo slide - responsive size */}
+      {/* Chỉ báo slide */}
       <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex space-x-2 sm:space-x-3 z-10">
         {slides.map((_, index) => (
           <button
@@ -111,7 +106,7 @@ export default function HeroSlider() {
         ))}
       </div>
 
-      {/* Mobile touch hint */}
+      {/* Gợi ý chạm trên mobile */}
       <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-white/60 text-xs sm:hidden">
         Chạm để điều hướng
       </div>
