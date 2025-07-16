@@ -20,6 +20,16 @@ const slides: Slide[] = [
     title: "Đặt Xe Nhanh Chóng",
     bgImage: "assets/hero/banner.jpg",
   },
+  {
+    id: 3,
+    title: "Đặt Xe Nhanh Chóng",
+    bgImage: "assets/hero/banner2.jpg",
+  },
+  {
+    id: 4,
+    title: "Đặt Xe Nhanh Chóng",
+    bgImage: "assets/hero/banner3.jpg",
+  },
 ];
 
 export default function HeroSlider() {
