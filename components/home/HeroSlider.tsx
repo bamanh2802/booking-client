@@ -13,12 +13,12 @@ const slides: Slide[] = [
   {
     id: 1,
     title: "Đặt Xe Sang Trọng",
-    bgImage: "assets/hero/banner1.jpg",
+    bgImage: "assets/hero/banner0.jpg",
   },
   {
     id: 2,
     title: "Đặt Xe Nhanh Chóng",
-    bgImage: "assets/hero/banner.jpg",
+    bgImage: "assets/hero/banner1.jpg",
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ export default function HeroSlider() {
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [autoplay, slides.length]);

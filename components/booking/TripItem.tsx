@@ -2,16 +2,18 @@ import { Icon } from "@iconify/react";
 import { Card } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
+import { TripItemData } from "@/types";
 
 export function TripItem({
   trip,
   onSelect,
   isExpanded,
 }: {
-  trip: any;
+  trip: TripItemData;
   onSelect: () => void;
   isExpanded: boolean;
 }) {
+  console.log("TripItem rendered with trip:", trip);
   return (
     <Card className="mb-4">
       <div className="block md:hidden p-4 space-y-3">

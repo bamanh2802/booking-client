@@ -259,3 +259,12 @@ export interface BankAccountData {
   bankName: string;
   accountHolderName: string;
 }
+export interface TripItemData {
+  time: string;
+  route: string;
+  available: string;
+  price: string;
+  type: string;
+  pickup: string;
+  duration: string;
+}

@@ -15,16 +15,7 @@ import { BookingSuccessModal, BookingDetails } from "./BookingSuccessModal";
 
 import { getTripWithLocation, getDetailTrip } from "@/services/booking";
 import { Seat } from "@/types";
-
-interface TripItemData {
-  time: string;
-  route: string;
-  available: string;
-  price: string;
-  type: string;
-  pickup: string;
-  duration: string;
-}
+import { TripItemData } from "@/types";
 
 interface ApiTrip {
   _id: string;
@@ -230,6 +221,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
             <div className="lg:col-span-3">
               {trips.length > 0 ? (
                 trips.map((trip, idx) => {
+                  console.log("Rendering trip:", trip);
                   const tripDataForComponent: TripItemData = {
                     time: `${formatTime(trip.startTime)} - ${formatTime(trip.endTime)}`,
                     route: `${trip.startStation} → ${trip.endStation}`,
