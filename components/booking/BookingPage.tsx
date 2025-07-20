@@ -125,6 +125,7 @@ export default function BookingPage({ onSearch }: BookingPageProps) {
       );
 
       setTrips(response.data?.results || []);
+      console.log(response.data?.results);
       setTripCount(response.data?.pagination?.total || 0);
     } catch (e) {
       console.error("Failed to fetch trips:", e);

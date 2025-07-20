@@ -13,7 +13,6 @@ export function TripItem({
   onSelect: () => void;
   isExpanded: boolean;
 }) {
-  console.log("TripItem rendered with trip:", trip);
   return (
     <Card className="mb-4">
       <div className="block md:hidden p-4 space-y-3">
